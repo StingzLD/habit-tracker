@@ -7,6 +7,7 @@ PIXELA_TOKEN = os.environ['PIXELA_TOKEN']
 
 PIXELA_ENDPOINT = "https://pixe.la/v1/users"
 GRAPH_ENDPOINT = f"{PIXELA_ENDPOINT}/{PIXELA_USERNAME}/graphs"
+WEBHOOK_ENDPOINT = f"{PIXELA_ENDPOINT}/{PIXELA_USERNAME}/webhooks"
 HEADERS = {
     "X-USER-TOKEN": PIXELA_TOKEN
 }
@@ -105,6 +106,24 @@ def delete_pixel():
                            )
 
 
+def stopwatch_webhook():
+    webhook_params = {
+        "graphID": GRAPH_ID,
+        "type": "stopwatch"
+    }
+
+    return requests.post(url=WEBHOOK_ENDPOINT,
+                         json=webhook_params,
+                         headers=HEADERS
+                         )
+
+
+def stopwatch():
+    return requests.post(url=f"{GRAPH_ENDPOINT}/{GRAPH_ID}/stopwatch",
+                         headers=HEADERS
+                         )
+
+
 # -------------------------------- MAIN CODE -------------------------------- #
 more_to_do = True
 while more_to_do:
@@ -114,7 +133,9 @@ while more_to_do:
                    "Press 3 to Delete a Graph\n"
                    "Press 4 to Post a Pixel\n"
                    "Press 5 to Update a Pixel\n"
-                   "Press 6 to Delete a Pixel\n")
+                   "Press 6 to Delete a Pixel\n"
+                   "Press 7 to Create Stopwatch Webhook\n"
+                   "Press 8 to Start/Stop the Stopwatch\n")
     response = None
 
     if action == "1":
@@ -129,6 +150,10 @@ while more_to_do:
         response = update_pixel()
     elif action == "6":
         response = delete_pixel()
+    elif action == "7":
+        response = stopwatch_webhook()
+    elif action == "8":
+        response = stopwatch()
 
     print(response.status_code)
     print(response.text)
